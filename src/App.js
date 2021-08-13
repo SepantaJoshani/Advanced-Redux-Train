@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
-import { uiActions } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
+import { sendCartData } from "./store/cart-slice";
 
 let isFirstTime = true;
 
@@ -14,49 +14,12 @@ function App() {
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.ui.notification);
 
-  
   useEffect(() => {
-    const sendingData = async () => {
-      dispatch(
-        uiActions.showNotification({
-          status: "Pending",
-          title: "Sending...",
-          message: "Sending Cart Data !",
-        })
-      );
-      const response = await fetch(
-        "https://food-order-bf696-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cart),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("There is An Error");
-      }
-      dispatch(
-        uiActions.showNotification({
-          status: "success",
-          title: "Success !",
-          message: "Sending Cart Data Successfully !",
-        })
-      );
-    };
     if (isFirstTime) {
       isFirstTime = false;
       return;
     }
-
-    sendingData().catch((error) => {
-      dispatch(
-        uiActions.showNotification({
-          status: "error",
-          title: "Error !",
-          message: "Sending Cart Data Failed !",
-        })
-      );
-    });
+    dispatch(sendCartData(cart));
   }, [cart, dispatch]);
 
   return (
