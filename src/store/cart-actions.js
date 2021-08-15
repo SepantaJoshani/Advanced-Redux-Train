@@ -8,11 +8,11 @@ export const fetchCartData = () => {
         "https://food-order-bf696-default-rtdb.firebaseio.com/cart.json"
       );
 
-      if (response.ok) {
+      if (!response.ok) {
         throw new Error("Fetching Failed !");
       }
 
-      const responseData = response.json();
+      const responseData =await response.json();
 
       return responseData;
     };

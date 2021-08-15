@@ -16,7 +16,7 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
   
   useEffect(()=>{
-    dispatch(fetchCartData)
+    dispatch(fetchCartData())
   },[dispatch])
   
   useEffect(() => {
