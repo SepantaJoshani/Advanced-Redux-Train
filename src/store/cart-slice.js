@@ -1,8 +1,8 @@
-
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+import { uiActions } from "./ui-slice";
 
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState: {
     items: [],
     totalQuantity: 0,
@@ -41,6 +41,49 @@ const cartSlice = createSlice({
     },
   },
 });
+
+export const sendCartData = (cart) => {
+  return async (dispatch) => {
+    dispatch(
+      uiActions.showNotification({
+        status: "Pending",
+        title: "Sending...",
+        message: "Sending Cart Data!",
+      })
+    );
+
+    const sendHttp = async () => {
+      const response = await fetch(
+        "https://food-order-bf696-default-rtdb.firebaseio.com/cart.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(cart),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Sending Data failed ...");
+      }
+    };
+    try {
+      await sendHttp();
+      dispatch(
+        uiActions.showNotification({
+          status: "success",
+          title: "Success",
+          message: "Sending Cart Data Successfully",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        uiActions.showNotification({
+          status: "error",
+          title: "Error",
+          message: "Sending Cart Data Failed",
+        })
+      );
+    }
+  };
+};
 
 export const cartActions = cartSlice.actions;
 
