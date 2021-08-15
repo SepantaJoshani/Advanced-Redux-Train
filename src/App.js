@@ -7,6 +7,8 @@ import Products from "./components/Shop/Products";
 import { uiActions } from "./store/ui-slice";
 import Notification from "./components/UI/Notification";
 
+let isFirstTime = true
+
 function App() {
   const showCart = useSelector((state) => state.ui.cartIsVisible);
   const cart = useSelector((state) => state.cart);
@@ -41,6 +43,11 @@ function App() {
         })
       );
     };
+
+    if(isFirstTime){
+      isFirstTime = false
+      return
+    }
 
     sendData().catch((error) => {
       dispatch(
